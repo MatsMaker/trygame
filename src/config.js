@@ -1,5 +1,6 @@
 export default {
-  gameWidth: 760,
-  gameHeight: 400,
-  localStorageName: 'phaseres6webpack'
+  socketHost: 'http://localhost:8080',
+  gameWidth: 800,
+  gameHeight: 600,
+  localStorageName: 'game'
 }

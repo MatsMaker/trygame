@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack",
+    "server": "node server.js",
     "deploy": "webpack --config webpack.production.config.js",
     "test": "eslint ./src/**/**.js"
   },
@@ -28,7 +29,11 @@
     "webpack": "^3.4.1"
   },
   "dependencies": {
+    "express": "^4.15.3",
     "phaser-ce": "^2.8.3",
+    "rxjs-es": "^5.0.0-beta.12",
+    "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3",
     "webfontloader": "^1.6.28"
   }
 }
