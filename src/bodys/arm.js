@@ -10,11 +10,6 @@ export default class ArmPointer extends Phaser.Physics.P2.Body {
     this.debug = __DEV__
     this.static = true
     this.mass = 0
-
-    // attach pointer events
-    this.game.input.onDown.add(this.click, this)
-    this.game.input.onUp.add(this.release, this)
-    this.game.input.addMoveCallback(this.move, this)
   }
 
   click (pointer) {

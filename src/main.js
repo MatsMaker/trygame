@@ -32,7 +32,8 @@ class Game extends Phaser.Game {
 
     this.state.start('Boot')
 
-    this.socket = io(config.socketHost)
+    this.$ = {} // custom name space
+    this.$.socket = io(config.socketHost)
   }
 }
 
