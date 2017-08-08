@@ -3,7 +3,10 @@ import MushroomObject from '../objects/mushroom'
 import ArmPointer from '../arm'
 
 export default class Game extends Phaser.State {
-  init () {}
+  init () {
+    this.game.stage.disableVisibilityChange = true
+  }
+
   preload () {}
 
   create () {
