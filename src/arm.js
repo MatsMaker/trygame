@@ -7,6 +7,7 @@ export default class ArmPointer extends Phaser.Physics.P2.Body {
     this.holds = null
     this.game.physics.p2.addBody(this)
 
+    this.debug = __DEV__
     this.static = true
     this.mass = 0
 
@@ -18,10 +19,11 @@ export default class ArmPointer extends Phaser.Physics.P2.Body {
 
   click (pointer) {
     const bodies = this.game.physics.p2.hitTest(pointer.position, this.bodyOfinteraction)
-
     // p2 uses different coordinate system, so convert the pointer position to p2's coordinate system
-    const physicsPos = [this.game.physics.p2.pxmi(pointer.position.x), this.game.physics.p2.pxmi(pointer.position.y)]
-
+    const physicsPos = [
+      this.game.physics.p2.pxmi(pointer.position.x),
+      this.game.physics.p2.pxmi(pointer.position.y)
+    ]
     if (bodies.length) {
       const clickedBody = bodies[0]
 
@@ -37,7 +39,8 @@ export default class ArmPointer extends Phaser.Physics.P2.Body {
         [
           this.game.physics.p2.mpxi(localPointInBody[0]),
           this.game.physics.p2.mpxi(localPointInBody[1])
-        ])
+        ]
+      )
     }
   }
 
@@ -48,8 +51,8 @@ export default class ArmPointer extends Phaser.Physics.P2.Body {
 
   move (pointer) {
     // p2 uses different coordinate system, so convert the pointer position to p2's coordinate system
-    // need use this.game.physics.p2.pxmi
-    this.x = this.game.physics.p2.pxmi(pointer.position.x)
-    this.y = this.game.physics.p2.pxmi(pointer.position.y)
+    // this.game.physics.p2.pxmi
+    this.x = pointer.position.x
+    this.y = pointer.position.y
   }
 }

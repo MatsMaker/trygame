@@ -19,9 +19,9 @@ export default class Game extends Phaser.State {
   }
 
   render () {
-    // if (__DEV__) {
-    //   this.game.debug.spriteInfo(this.$.mushroom, 32, 32)
-    // }
+    if (__DEV__) {
+      this.game.debug.spriteInfo(this.$.mushroom.sprite, 32, 32)
+    }
   }
 
   update () {
@@ -29,8 +29,9 @@ export default class Game extends Phaser.State {
   }
 
   _initSpace () {
+    //  Enable p2 physics
     this.game.physics.startSystem(Phaser.Physics.P2JS)
-    this.game.physics.p2.gravity.y = 1200
+    this.game.physics.p2.gravity.y = 1000
   }
 
   _addMushroom () {
