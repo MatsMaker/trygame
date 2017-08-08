@@ -13,7 +13,6 @@ export default class MushroomObject extends Phaser.Physics.P2.Body {
     super(game, spriteOfObj, x, y, mass)
     spriteOfObj.body = this
     this.mass = mass || 1700
-    this.damping = 0.1
     this.debug = __DEV__
 
     this.game.physics.p2.enable(this)
