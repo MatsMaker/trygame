@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { centerGameObjects } from '../utils'
+import BaseService from '../services/base'
 
 export default class extends Phaser.State {
   init () {}
@@ -19,6 +20,16 @@ export default class extends Phaser.State {
   }
 
   create () {
+    this.$ = {}
+    this.$.baseService = new BaseService(this.game, this.game.$.socket, this)
+    this.$.baseService.connection()
+  }
+
+  connection () {
+    this._startGame()
+  }
+
+  _startGame () {
     this.state.start('Game')
   }
 }

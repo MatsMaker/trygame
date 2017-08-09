@@ -4,6 +4,12 @@ const inputEvents = {
   move: 'move'
 }
 
+const base = {
+  connection: 'connection',
+  disconnect: 'disconnect'
+}
+
 module.exports = {
+  base,
   inputEvents
 }

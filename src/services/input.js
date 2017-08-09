@@ -1,35 +1,23 @@
-export default class InputService {
-  constructor (game, gameSoket, object, relations) {
-    this.game = game
-    this.gameSoket = gameSoket
-    this.object = object
-    this.relations = relations
+import AbstractService from './abstract'
+import {inputEvents} from '../../protocol.relations'
 
-    this.game.input.onDown.add(this._observer(this.relations.onDown), this.object)
-    this.game.input.onUp.add(this._observer(this.relations.onUp), this.object)
-    this.game.input.addMoveCallback(this._observer(this.relations.move), this.object)
+export default class InputService extends AbstractService {
+  constructor (game, gameSoket, object, relations = inputEvents) {
+    super(game, gameSoket, object, relations)
 
-    this._initListeners()
+    this._game.input.onDown.add(this._observer(this._relations.onDown), this._object)
+    this._game.input.onUp.add(this._observer(this._relations.onUp), this._object)
+    this._game.input.addMoveCallback(this._observer(this._relations.move), this._object)
   }
 
   _observer (observer) {
     return (pointer) => {
-      const data = JSON.stringify({
+      const data = {
         position: {
           x: pointer.position.x,
           y: pointer.position.y
-        }})
-      this.gameSoket.emit(observer, data)
-    }
-  }
-
-  _initListeners () {
-    for (var eventName in this.relations) {
-      const soketResponse = event => pointerData => {
-        const pointer = JSON.parse(pointerData)
-        this.object[event](pointer)
-      }
-      this.gameSoket.on(this.relations[eventName], soketResponse(this.relations[eventName]))
+        }}
+      this._gameSoket.emit(observer, data)
     }
   }
 }

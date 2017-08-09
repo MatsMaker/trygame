@@ -5,7 +5,6 @@ import WorldMaterial from '../materials/world.material'
 import MushroomMaterial from '../materials/mushroom.material'
 import RigidityContact from '../materials/rigidity.contact'
 import InputService from '../services/input'
-import protocols from '../../protocols'
 
 export default class Game extends Phaser.State {
   init () {
@@ -61,15 +60,11 @@ export default class Game extends Phaser.State {
 
   _initArm () {
     this.$.armPointer = new ArmPointer(this.game)
-    // attach pointer events
-    // this.game.input.onDown.add(this.$.armPointer.click, this.$.armPointer)
-    // this.game.input.onUp.add(this.$.armPointer.release, this.$.armPointer)
-    // this.game.input.addMoveCallback(this.$.armPointer.move, this.$.armPointer)
+
     this.$.inputService = new InputService(
       this.game,
       this.game.$.socket,
-      this.$.armPointer,
-      protocols.inputEvents
+      this.$.armPointer
     )
   }
 
