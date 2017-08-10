@@ -1,31 +1,47 @@
 const crypto = require('crypto')
-const app = require('express')()
-const http = require('http').Server(app)
-const io = require('socket.io')(http)
-const path = require('path')
+// const app = require('express')()
+// const http = require('http').Server(app)
+// const io = require('socket.io')(http)
+// const path = require('path')
+const WebSocket = require('ws')
 const protocols = require('./protocol.relations')
 
-const APP_PORT = 8080
-const DIST_DIR = path.join(__dirname, 'dist')
-
-app.get('/', function (req, res) {
-  res.sendFile(path.join(DIST_DIR, 'index.html'))
-})
+// const APP_PORT = 8080
+// const DIST_DIR = path.join(__dirname, 'dist')
+//
+// app.get('/', function (req, res) {
+//   res.sendFile(path.join(DIST_DIR, 'index.html'))
+// })
 
 const connections = []
 
-io.on(protocols.base.connection, (socket) => {
+const ws = new WebSocket.Server({
+  port: 8080
+})
+
+ws.broadcast = function broadcast (data) {
+  ws.clients.forEach(function each (client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(data)
+    }
+  })
+}
+
+ws.on(protocols.base.connection, (socket) => {
   const token = crypto.randomBytes(64).toString('hex')
   connections.push(token)
 
   console.log('a user connected')
   socket.on(protocols.base.connection, () => {
-    socket.emit(protocols.base.connection, {token})
+    socket.send(protocols.base.connection, {
+      eventName: protocols.base.connection,
+      data: token
+    })
   })
 
   for (var variable in protocols.inputEvents) {
     const soketResponse = eventName => data => {
-      socket.emit(eventName, data)
+      socket.send(eventName, data)
     }
     socket.on(protocols.inputEvents[variable], soketResponse(protocols.inputEvents[variable]))
   }
@@ -35,6 +51,6 @@ io.on(protocols.base.connection, (socket) => {
   })
 })
 
-http.listen(APP_PORT, () => {
-  console.log(`listening on *:${APP_PORT}`)
-})
+// http.listen(APP_PORT, () => {
+//   console.log(`listening on *:${APP_PORT}`)
+// })

@@ -1,7 +1,8 @@
 import 'pixi'
 import 'p2'
 import Phaser from 'phaser'
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
+import Rx from 'rxjs/Rx'
 
 import BootState from './states/Boot'
 import SplashState from './states/Splash'
@@ -33,7 +34,17 @@ class Game extends Phaser.Game {
     this.state.start('Boot')
 
     this.$ = {} // custom name space
-    this.$.socket = io(config.socketHost)
+    this.$.socketStream$ = Rx.Observable.webSocket(config.socketHost)
+    // this.$.socketStream$.subscribe(
+    //   {
+    //     next: (request) => {
+    //       console.log(request)
+    //     },
+    //     error: (err) => console.warn(err),
+    //     complete: () => {}
+    //   }
+    // )
+    // this.$.socket = io(config.socketHost)
   }
 }
 
