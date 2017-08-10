@@ -1,4 +1,3 @@
-const crypto = require('crypto')
 const app = require('express')()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
@@ -12,20 +11,17 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(DIST_DIR, 'index.html'))
 })
 
-const connections = []
-
 io.on(protocols.base.connection, (socket) => {
-  const token = crypto.randomBytes(64).toString('hex')
-  connections.push(token)
+  console.log('a user connected: ', socket.id)
+  io.emit(protocols.session.newUser, {id: socket.id})
 
-  console.log('a user connected')
-  socket.on(protocols.base.connection, () => {
-    socket.emit(protocols.base.connection, {token})
+  socket.on(protocols.session.auth, () => {
+    socket.emit(protocols.session.auth, {id: socket.id})
   })
 
   for (var variable in protocols.inputEvents) {
     const soketResponse = eventName => data => {
-      socket.emit(eventName, data)
+      io.emit(eventName, data)
     }
     socket.on(protocols.inputEvents[variable], soketResponse(protocols.inputEvents[variable]))
   }

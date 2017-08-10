@@ -1,8 +1,9 @@
 import Phaser from 'phaser'
 
 export default class ArmPointer extends Phaser.Physics.P2.Body {
-  constructor (...argm) {
-    super(...argm)
+  constructor (game, owner, sprite, x, y, mass) {
+    super(game, sprite, x, y, mass)
+    this._owner = owner
     this.bodyOfinteraction = []
     this.holds = null
     this.game.physics.p2.addBody(this)

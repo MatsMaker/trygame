@@ -9,7 +9,13 @@ const base = {
   disconnect: 'disconnect'
 }
 
+const session = {
+  auth: 'auth',
+  newUser: 'newUser'
+}
+
 module.exports = {
   base,
+  session,
   inputEvents
 }

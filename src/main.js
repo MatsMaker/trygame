@@ -6,6 +6,7 @@ import io from 'socket.io-client'
 import BootState from './states/Boot'
 import SplashState from './states/Splash'
 import GameState from './states/Game'
+import AuthService from './services/auth'
 
 import config from './config'
 
@@ -30,10 +31,19 @@ class Game extends Phaser.Game {
     this.state.add('Splash', SplashState, false)
     this.state.add('Game', GameState, false)
 
-    this.state.start('Boot')
-
     this.$ = {} // custom name space
     this.$.socket = io(config.socketHost)
+    this.$.authService = new AuthService(this, this.$.socket, this)
+    this.$.authService.auth()
+  }
+
+  newUser (response) {
+    console.log('newUser:', response)
+  }
+
+  auth (response) {
+    this.$.user = response
+    this.state.start('Boot')
   }
 }
 

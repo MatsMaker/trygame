@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
-import MushroomObject from '../objects/mushroom'
-import ArmPointer from '../bodys/arm'
+import MushroomsCollection from '../collections/mushrooms'
+import ArmsCollection from '../collections/arms'
 import WorldMaterial from '../materials/world.material'
 import MushroomMaterial from '../materials/mushroom.material'
 import RigidityContact from '../materials/rigidity.contact'
@@ -17,15 +17,23 @@ export default class Game extends Phaser.State {
     this._initSpace()
     this.$ = {} // custom name space
 
-    this._text('Phaser + ES6 + Webpack')
+    this._text('Try game')
+
+    this.$.armsCollection = new ArmsCollection(this.game, this.game.$.user)
+    this.$.armsCollection.addItemOfOwner()
+    this._initInput()
+
+    this.$.mushroomsCollection = new MushroomsCollection(this.game, this.game.$.user)
+    this.$.mushroomsCollection.addItemOfOwner()
+
+    this.$.armsCollection.itemOfOwner.bodyOfinteraction.push(this.$.mushroomsCollection.itemOfOwner)
+
     this._intitObjects()
-    this._initArm()
-    this.$.armPointer.bodyOfinteraction.push(this.$.mushroom)
   }
 
   render () {
     if (__DEV__) {
-      this.game.debug.spriteInfo(this.$.mushroom.sprite, 32, 32)
+      this.game.debug.spriteInfo(this.$.mushroomsCollection.itemOfOwner.sprite, 32, 32)
     }
   }
 
@@ -40,31 +48,17 @@ export default class Game extends Phaser.State {
   }
 
   _intitObjects () {
-    this.$.mushroom = new MushroomObject(
-      this.game,
-      null,
-      this.world.centerX,
-      this.world.centerY
-    )
-    this.$.mushroom2 = new MushroomObject(
-      this.game,
-      null,
-      this.world.centerX,
-      this.world.centerY
-    )
     this.$.worldMaterial = new WorldMaterial(this.game)
     this.game.physics.p2.setWorldMaterial(this.$.worldMaterial, true, true, true, true)
-    this.$.mushroomMaterial = new MushroomMaterial(this.game, this.$.mushroom)
+    this.$.mushroomMaterial = new MushroomMaterial(this.game, this.$.mushroomsCollection.itemOfOwner)
     this.$.contactMushroomAndWorkd = new RigidityContact(this.game, this.$.mushroomMaterial, this.$.worldMaterial)
   }
 
-  _initArm () {
-    this.$.armPointer = new ArmPointer(this.game)
-
+  _initInput () {
     this.$.inputService = new InputService(
       this.game,
       this.game.$.socket,
-      this.$.armPointer
+      this.$.armsCollection.itemOfOwner
     )
   }
 
