@@ -1,7 +1,7 @@
-import Phaser from 'phaser'
+import AbstractService from './abstract'
 import WebFont from 'webfontloader'
 
-export default class extends Phaser.State {
+export default class extends AbstractService {
   init () {
     this.stage.backgroundColor = '#EDEEC9'
     this.fontsReady = false

@@ -1,12 +1,16 @@
 import Phaser from 'phaser'
+import AbstractState from './abstract'
+import io from 'socket.io-client'
+import AuthService from '../services/auth'
 import MushroomsCollection from '../collections/mushrooms'
 import ArmsCollection from '../collections/arms'
 import WorldMaterial from '../materials/world.material'
 import MushroomMaterial from '../materials/mushroom.material'
 import RigidityContact from '../materials/rigidity.contact'
 import InputService from '../services/input'
+import config from '../config'
 
-export default class Game extends Phaser.State {
+export default class Game extends AbstractState {
   init () {
     this.game.stage.disableVisibilityChange = true
   }
@@ -14,26 +18,40 @@ export default class Game extends Phaser.State {
   preload () {}
 
   create () {
+    this.$.socket = io(config.socketHost)
+    this.$.service.auth = new AuthService(this.game, this.$.socket, this)
+    this.$.service.auth.auth()
+  }
+
+  newUser (response) {
+    console.log('newUser:', response)
+  }
+
+  auth (response) {
+    this.$.user = response
+    this.startGame()
+  }
+
+  startGame () {
     this._initSpace()
-    this.$ = {} // custom name space
 
     this._text('Try game')
 
-    this.$.armsCollection = new ArmsCollection(this.game, this.game.$.user)
-    this.$.armsCollection.addItemOfOwner()
+    this.$.collection.arms = new ArmsCollection(this.game, this.$.user)
+    this.$.collection.arms.addItemOfOwner()
     this._initInput()
 
-    this.$.mushroomsCollection = new MushroomsCollection(this.game, this.game.$.user)
-    this.$.mushroomsCollection.addItemOfOwner()
+    this.$.collection.mushrooms = new MushroomsCollection(this.game, this.$.user)
+    this.$.collection.mushrooms.addItemOfOwner()
 
-    this.$.armsCollection.itemOfOwner.bodyOfinteraction.push(this.$.mushroomsCollection.itemOfOwner)
+    this.$.collection.arms.itemOfOwner.bodyOfinteraction.push(this.$.collection.mushrooms.itemOfOwner)
 
     this._intitObjects()
   }
 
   render () {
-    if (__DEV__) {
-      this.game.debug.spriteInfo(this.$.mushroomsCollection.itemOfOwner.sprite, 32, 32)
+    if (__DEV__ && this.$.user) {
+      this.game.debug.spriteInfo(this.$.collection.mushrooms.itemOfOwner.sprite, 32, 32)
     }
   }
 
@@ -50,15 +68,15 @@ export default class Game extends Phaser.State {
   _intitObjects () {
     this.$.worldMaterial = new WorldMaterial(this.game)
     this.game.physics.p2.setWorldMaterial(this.$.worldMaterial, true, true, true, true)
-    this.$.mushroomMaterial = new MushroomMaterial(this.game, this.$.mushroomsCollection.itemOfOwner)
+    this.$.mushroomMaterial = new MushroomMaterial(this.game, this.$.collection.mushrooms.itemOfOwner)
     this.$.contactMushroomAndWorkd = new RigidityContact(this.game, this.$.mushroomMaterial, this.$.worldMaterial)
   }
 
   _initInput () {
     this.$.inputService = new InputService(
       this.game,
-      this.game.$.socket,
-      this.$.armsCollection.itemOfOwner
+      this.$.socket,
+      this.$.collection.arms.itemOfOwner
     )
   }
 

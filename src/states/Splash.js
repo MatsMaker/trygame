@@ -1,8 +1,8 @@
-import Phaser from 'phaser'
+import AbstractService from './abstract'
 import { centerGameObjects } from '../utils'
 // import BaseService from '../services/base'
 
-export default class extends Phaser.State {
+export default class extends AbstractService {
   init () {}
 
   preload () {
@@ -20,11 +20,6 @@ export default class extends Phaser.State {
   }
 
   create () {
-    this.$ = {}
-    this._startGame()
-  }
-
-  _startGame () {
     this.state.start('Game')
   }
 }
