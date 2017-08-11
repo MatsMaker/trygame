@@ -14,8 +14,15 @@ const session = {
   newUser: 'newUser'
 }
 
+const mushroom = {
+  new: 'new',
+  move: 'move',
+  remove: 'remove'
+}
+
 module.exports = {
   base,
   session,
+  mushroom,
   inputEvents
 }
